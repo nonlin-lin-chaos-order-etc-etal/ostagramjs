@@ -5,7 +5,7 @@
 # Edited by https://mimi.link/gnome .
 
 tasks:
-  - init: npm install && npm run build && sudo apt install python3 pip3 curl libprotobuf-dev protobuf-compiler
+  - init: npm install && npm run build && sudo apt install python3 curl libprotobuf-dev protobuf-compiler
     command: |
       echo 'installing torch7...'
       cd
