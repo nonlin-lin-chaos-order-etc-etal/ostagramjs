@@ -5,9 +5,27 @@
 # Edited by https://mimi.link/gnome .
 
 tasks:
-  - init: npm install && npm run build
+  - init: npm install && npm run build && sudo apt install python3 pip3 curl libprotobuf-dev protobuf-compiler
     command: |
-      
+      echo 'installing torch7...'
+      cd
+      curl -s https://raw.githubusercontent.com/torch/ezinstall/master/install-deps | bash
+      git clone https://github.com/torch/distro.git ~/torch --recursive
+      cd ~/torch && ./install.sh
+      source ~/.bashrc
+      echo torch7 installed
+      echo 'installing loadcaffe...'
+      luarocks install loadcaffe
+      echo loadcaffe installed
+      echo 'fetching ns repo...'
+      cd
+      git clone https://github.com/jcjohnson/neural-style.git
+      cd neural-style
+      echo 'nd repo done.'
+      echo 'fetching ns pretrained neural network models...'
+      sh models/download_models.sh
+      echo 'fetched.'
+      echo 'launching the httpd'
       npm run start
 vscode:
   extensions:
