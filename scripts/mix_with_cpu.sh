@@ -5,7 +5,7 @@
 # th neural_style.lua -gpu -1 -print_iter 1 -style_image imagepathfilename1.jpg -content_image imagepathfilename2.jpg -output_image profile.png -num_iterations 100 -seed 123 -content_weight 10 -style_weight 1000 -image_size 512 -optimizer adam
 
 pushd ~/neural-style
-CL="th neural_style.lua -gpu -1 -print_iter 1 -style_image $1 -content_image $2 -output_image $3 -num_iterations $4 -seed 123 -content_weight 10 -style_weight 1000 -image_size 512 -optimizer adam"
+CL="time th neural_style.lua -gpu -1 -print_iter 1 -style_image $1 -content_image $2 -output_image $3 -num_iterations $4 -seed 123 -content_weight 10 -style_weight 1000 -image_size 512 -optimizer adam"
 echo "mixing... $CL"
 $CL
 ES=$?
