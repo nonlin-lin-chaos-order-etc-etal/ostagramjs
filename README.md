@@ -1,3 +1,23 @@
+# OstagramJS
+A simple Neural Style Transfer webapp implemented in NextJS.
+
+The name has been borrowed from folk songs and from this: https://github.com/SergeyMorugin/ostagram https://ostagram.me/
+
+## Project Status
+
+Work in progress, not yet released.
+
+## Running this project
+
+### Gitpod
+
+To deploy this project to Gitpod, tap this button:
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#github.com/nonlin-lin-chaos-order-etc-etal/ostagramjs)
+
+
+# Next.JS cultural layers follow
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
