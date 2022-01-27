@@ -2,11 +2,13 @@
 # Please adjust to your needs (see https://www.gitpod.io/docs/config-gitpod-file)
 # and commit this file to your remote git repository to share the goodness with others.
 #
-# Edited by #HypnosisItoopie .
+# Edited by https://mimi.link/gnome .
 
 tasks:
   - init: npm install && npm run build
-    command: npm run start
+    command: |
+      
+      npm run start
 vscode:
   extensions:
     - dbaeumer.vscode-eslint
