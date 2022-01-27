@@ -7,6 +7,7 @@
 tasks:
   - init: npm install && npm run build && sudo apt -y install python3 curl libprotobuf-dev protobuf-compiler
     command: |
+      pushd
       echo "installing qt4"
       sudo add-apt-repository ppa:rock-core/qt4
       sudo apt-get update
@@ -31,6 +32,7 @@ tasks:
       sh models/download_models.sh
       echo 'fetched.'
       echo 'launching the httpd'
+      popd
       npm run start
 vscode:
   extensions:
