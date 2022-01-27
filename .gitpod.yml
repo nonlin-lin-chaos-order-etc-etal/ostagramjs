@@ -7,6 +7,11 @@
 tasks:
   - init: npm install && npm run build && sudo apt -y install python3 curl libprotobuf-dev protobuf-compiler
     command: |
+      echo "installing qt4"
+      sudo add-apt-repository ppa:rock-core/qt4
+      sudo apt-get update
+      sudo apt -y install qt4-default
+      echo "qt4 done."
       echo 'installing torch7...'
       cd
       curl -s https://raw.githubusercontent.com/torch/ezinstall/master/install-deps | bash
