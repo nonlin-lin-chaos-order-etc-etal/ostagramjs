@@ -17,6 +17,22 @@ To deploy this project to Gitpod, tap this button:
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#github.com/nonlin-lin-chaos-order-etc-etal/ostagramjs)
 
+### A hack to run on AMD ROCm (2022 Jan 28)
+
+```sh
+git clone --recursive git@github.com:pytorch/pytorch.git && cd pytorch && python3 tools/amd_build/build_amd.py
+
+# This creates dist/*.whl
+RCCL_DIR=/opt/rocm/rccl/lib/cmake/rccl/ PYTORCH_ROCM_ARCH=gfx900 hip_DIR=/opt/rocm/hip/cmake/ USE_NVCC=OFF BUILD_CAFFE2_OPS=0 PATH=/usr/lib/ccache/:$PATH USE_CUDA=OFF python3 setup.py bdist_wheel
+
+# Use pip3
+sudo pip install pytorch/dist/*.whl
+
+# Now you can use PyTorch as usual and when you say a = torch.randn(5, 5, device="cuda"), it'll create a tensor on the (AMD) GPU.
+
+# Credits: http://lernapparat.de/pytorch-rocm/
+```
+
 
 # Next.JS cultural layers follow
 
