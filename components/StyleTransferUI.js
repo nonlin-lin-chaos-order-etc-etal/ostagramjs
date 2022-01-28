@@ -69,7 +69,7 @@ function CurrentStyleTransferUI() {
             <p>
                 <button
                     type="button"
-                    onClick={uploadToServer()}
+                    onClick={uploadToServer}
                     disabled={ () => bothImagesUploaded() ? "false" : "disabled" }
                 >Submit For Processing</button>
                 <button
@@ -83,13 +83,21 @@ function CurrentStyleTransferUI() {
         // setTimeout(() => setState("showResults"), 5000);
         return (<>
             <h1>Progress Status</h1>
+            <hr/>
             <p><i>{progressState["status_msg"]}</i></p>
+            <hr/>
             <p><i>Please wait</i></p>
+            <hr/>
+            <button
+                type="button"
+                onClick={() => setState("showUploader")}
+            >Start Again</button>
         </>);
     }
     if (currentState == "showResults") {
         return (<>
             <h1>Style Transfer Results</h1>
+            <hr/>
             <h2>Source Images</h2>
             <table border={0}><tr>
                 <td>
@@ -99,16 +107,16 @@ function CurrentStyleTransferUI() {
                     <Image src={getImageSrc("styleImage")} width={getImageWidth("styleImage")} height={getImageHeight("styleImage")} alt="Style image" />
                 </td>
             </tr></table>
+            <hr/>
             <h2>Result Image</h2>
             <p align="center">
                 <Image src={getImageSrc("resultImage")} width={getImageWidth("resultImage")} height={getImageHeight("resultImage")} alt="Result image" />
             </p>
-            <p>
-                <button
-                    type="button"
-                    onClick={() => setState("showUploader")}
-                >Mix Another Pair</button>
-            </p>
+            <hr/>
+            <button
+                type="button"
+                onClick={() => setState("showUploader")}
+            >Start Again</button>
         </>);
     }
     throw `invalid state for style transfer ui component: '${currentState}'`;
