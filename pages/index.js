@@ -5,7 +5,7 @@ import lightTheme from '../styles/light-theme'
 
 import StyleTransferUI from '../components/StyleTransferUI'
 
-export default () => {
+export default function IndexPage () {
   return (
     <StyleTransferUI theme={lightTheme} name='Style Transfer Neural Network Demo using Next.js'/>
   )
