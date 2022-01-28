@@ -1,5 +1,4 @@
 import { useState, createElement } from "react";
-import useSWR from 'swr'
 import axios from 'axios'
 import Head from 'next/head'
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
@@ -69,8 +68,13 @@ function CurrentStyleTransferUI() {
         body
     }).then(res => {
         console.log("http reply:",res)
-        return res.data
-    });
+        set_moment_stamp(Date.now()+"_"+Math.random());
+        setProgressState({"status_msg":"Uploaded images, mixing images with the neural network..."})
+    }).catch(error) {
+        console.log("http reply (error):", error.message, error);
+        set_moment_stamp(Date.now()+"_"+Math.random());
+        setProgressState({"status_msg":`Error: ${error.message}`})
+    };
   
     const uploadToServer = () => {
         console.log("uploadToServer enter");
@@ -81,23 +85,7 @@ function CurrentStyleTransferUI() {
         body.append("contentImage", imagesState["contentImage"]["i"]);
         body.append("styleImage", imagesState["styleImage"]["i"]);
         console.log("uploadToServer posting");
-
-        const { data, error } = useSWR(
-          () => `/api/upload`,
-          url => fetcher(url, body)
-        )
-
-        if (error) {
-            set_moment_stamp(Date.now()+"_"+Math.random());
-            setProgressState({"status_msg":`Error: ${error.message}`})
-            return
-        }
-        if (!data){
-            setProgressState({"status_msg":`Uploading images...`})
-            return
-        }
-        set_moment_stamp(Date.now()+"_"+Math.random());
-        setProgressState({"status_msg":"Uploaded images, mixing images with the neural network..."})
+        fetcher('/api/upload', body);
     };
   
     if (currentState == "showUploader") {
