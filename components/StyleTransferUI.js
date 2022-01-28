@@ -2,8 +2,9 @@ import { useState } from "react";
 import Head from 'next/head'
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { normalize } from 'polished'
+import Image from 'next/image'
 
-function currentStyleTransferUI() {
+function CurrentStyleTransferUI() {
     const INITIAL_IMAGES_STATE = {
         "contentImage":{"src":undefined,"w":256,"h":256},
         "styleImage":{"src":undefined,"w":256,"h":256},
@@ -129,7 +130,7 @@ export default ({ children, theme, title = 'Style Transfer UI' }) => (
         />
       </Head>
 
-      
+      <CurrentStyleTransferUI/>
 
       {/*children*/}
 
