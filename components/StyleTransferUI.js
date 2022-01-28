@@ -1,4 +1,5 @@
 import { useState, createElement } from "react";
+import axios from 'axios';
 import Head from 'next/head'
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { normalize } from 'polished'
