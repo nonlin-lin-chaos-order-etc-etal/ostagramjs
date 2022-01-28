@@ -117,7 +117,7 @@ const Container = styled.main`
   min-height: 100vh;
 `
 
-export default function IndexPage ({ children, theme, title = 'Style Transfer UI' }) (
+export default function IndexPage ({ children, theme, title = 'Style Transfer UI' }) { return (
   <ThemeProvider theme={theme}>
     <Container>
       <Head>
@@ -136,4 +136,4 @@ export default function IndexPage ({ children, theme, title = 'Style Transfer UI
       <GlobalStyle />
     </Container>
   </ThemeProvider>
-)
+) }
