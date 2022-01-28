@@ -73,8 +73,8 @@ function CurrentStyleTransferUI() {
     }).catch(error => {
         console.log("http reply (error):", error.message, error);
         set_moment_stamp(Date.now()+"_"+Math.random());
-        setProgressState({"status_msg":`Error: ${error.message}`})
-    };
+        setProgressState({"status_msg":`Error: ${error.message}`});
+    });
   
     const uploadToServer = () => {
         console.log("uploadToServer enter");
