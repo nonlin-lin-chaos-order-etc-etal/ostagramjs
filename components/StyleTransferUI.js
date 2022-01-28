@@ -122,10 +122,12 @@ function CurrentStyleTransferUI() {
             <hr/>
             <p><i>Please wait</i></p>
             <hr/>
-            <button
-                type="button"
-                onClick={() => setState("showUploader")}
-            >Start Again</button>
+            <p>
+                <button
+                    type="button"
+                    onClick={() => setState("showUploader")}
+                >Start Again</button>
+            </p>
         </>);
     }
     if (currentState == "showResults") {
@@ -143,14 +145,16 @@ function CurrentStyleTransferUI() {
             </tr></table>
             <hr/>
             <h2>Result Image</h2>
-            <p align="center">
+            <p>
                 <Image src={getImageSrc("resultImage")} width={getImageWidth("resultImage")} height={getImageHeight("resultImage")} alt="Result image" />
             </p>
             <hr/>
-            <button
-                type="button"
-                onClick={() => setState("showUploader")}
-            >Start Again</button>
+            <p>
+                <button
+                    type="button"
+                    onClick={() => setState("showUploader")}
+                >Start Again</button>
+            </p>
         </>);
     }
     throw `invalid state for style transfer ui component: '${currentState}'`;
