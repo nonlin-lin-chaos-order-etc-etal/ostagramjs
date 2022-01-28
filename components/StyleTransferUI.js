@@ -40,7 +40,8 @@ function CurrentStyleTransferUI() {
         var imagesStateNew = imagesState;
         imagesStateNew[imageKey]["i"]=i;
         imagesStateNew[imageKey]["src"]=URL.createObjectURL(i);
-        setImagesState(imagesStateNew)
+        setImagesState(null); //to trigger React refresh FIXME
+        setImagesState(imagesStateNew);
       }
     };
   
