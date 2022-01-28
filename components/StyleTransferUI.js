@@ -74,6 +74,10 @@ function CurrentStyleTransferUI() {
 
         axios.post("/api/upload", {
             method: "POST",
+            headers: {
+                'Accept': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
             body
         }).then(res => {
             console.log("http reply:",res)
