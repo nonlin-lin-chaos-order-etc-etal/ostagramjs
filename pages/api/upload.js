@@ -15,10 +15,10 @@ export default function handler(req, res) {
     map
   }).then(res => {
       console.log("http reply:",res)
-      res.status(200).json({ response: res }); //TODO
+      res.status(200).json({ response_body: res.body }); //TODO
   }).catch(err => {
       console.log("http reply (error):", err.message, err)
-      res.status(500).json({ error: err });
+      res.status(500).json({ error_message: err.message });
   });
 
 }
