@@ -6,13 +6,13 @@ import querystring from 'querystring';
 export default function handler(req, res) {
   const req_body = req.body;
   const map = querystring.parse(req_body)
-  const body = new FormData();
-  body.append("contentImage", imagesState["contentImage"]["i"]);
-  body.append("styleImage", imagesState["styleImage"]["i"]);
-  console.log("uploadToNN posting");
   axios.post("http://tranoo.com:9999/", {
     method: "POST",
-    body
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    map
   }).then(res => {
       console.log("http reply:",res)
       res.status(200).json({ response: res }); //TODO
