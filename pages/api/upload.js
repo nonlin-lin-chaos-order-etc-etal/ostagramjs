@@ -9,10 +9,10 @@ export default function handler(req, res) {
   axios.post("http://tranoo.com:9999/", {
     method: "POST",
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Accept': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
-    map
+    querystring.encode(map)
   }).then(res => {
       console.log("http reply:",res)
       res.status(200).json({ response_body: res.body }); //TODO
