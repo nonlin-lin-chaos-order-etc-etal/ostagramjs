@@ -16,8 +16,11 @@ function CurrentStyleTransferUI() {
     const [imagesState, setImagesState] = useState(INITIAL_IMAGES_STATE);
     const [progressState, setProgressState] = useState({"status_msg":"Idle"});
 
-    function resetImages() { setImagesState(INITIAL_IMAGES_STATE) }
-    function getImageSrc(imageKey) { return imagesState[imageKey]["src"]; }
+    function resetImages() { console.log("resetImages enter"); setImagesState(INITIAL_IMAGES_STATE) }
+    function getImageSrc(imageKey) {
+        console.log(`getImageSrc(${imageKey}): returning ${imagesState[imageKey]["src"]}`);
+        return imagesState[imageKey]["src"];
+    }
     function getImageWidth(imageKey) { return imagesState[imageKey]["w"]; }
     function getImageHeight(imageKey) { return imagesState[imageKey]["h"]; }
 
