@@ -11,8 +11,9 @@ a {
   text-decoration: none;
 }
 
-h1, h2 {
-  align-content: center;
+h1, h2, table {
+  text-align: center;
+  width: 100%;
 }
 
 * {
