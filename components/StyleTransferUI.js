@@ -32,8 +32,11 @@ function CurrentStyleTransferUI() {
     }
 
     const uploadToClient = (event, imageKey) => {
+      console.log(`uploadToClient(${event}, ${imageKey}) entered`)
       if (event.target.files && event.target.files[0]) {
+        console.log(`uploadToClient: triggered the handling`)
         const i = event.target.files[0];
+        console.log(`uploadToClient: i: '${i}'`)
         var imagesStateNew = imagesState;
         imagesStateNew[imageKey]["i"]=i;
         imagesStateNew[imageKey]["src"]=URL.createObjectURL(i);
