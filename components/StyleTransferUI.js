@@ -72,7 +72,7 @@ function CurrentStyleTransferUI() {
         body.append("styleImage", imagesState["styleImage"]["i"]);
         console.log("uploadToServer posting");
 
-        axios.post("http://tranoo.com:9999/", {
+        axios.post("/api/upload", {
             method: "POST",
             headers: {
                 'Accept': 'application/x-www-form-urlencoded',
