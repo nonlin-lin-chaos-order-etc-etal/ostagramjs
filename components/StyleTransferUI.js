@@ -104,7 +104,7 @@ function CurrentStyleTransferUI() {
                 <button
                     type="button"
                     onClick={uploadToServer}
-                    disabled={ () => !bothImagesUploaded() }
+                    disabled={!bothImagesUploaded()}
                 >Submit For Processing</button>
                 <button
                     type="button"
