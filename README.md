@@ -1,7 +1,7 @@
 # OstagramJS
 A simple Neural Style Transfer webapp implemented in NextJS.
 
-Based on https://github.com/jcjohnson/neural-style .
+Porting from obsolete py2.7 https://github.com/jcjohnson/neural-style into https://www.digitalocean.com/community/tutorials/how-to-perform-neural-style-transfer-with-python-3-and-pytorch .
 
 The name has been borrowed from folk songs and from this: https://github.com/SergeyMorugin/ostagram https://ostagram.me/
 
