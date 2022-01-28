@@ -6,9 +6,9 @@ import Image from 'next/image'
 
 function CurrentStyleTransferUI() {
     const INITIAL_IMAGES_STATE = {
-        "contentImage":{"src":undefined,"w":256,"h":256},
-        "styleImage":{"src":undefined,"w":256,"h":256},
-        "resultImage":{"src":undefined,"w":256,"h":256},
+        "contentImage":{"src":undefined,"w":256,"h":256,"i":null,"createObjectURL":null},
+        "styleImage":{"src":undefined,"w":256,"h":256,"i":null,"createObjectURL":null},
+        "resultImage":{"src":undefined,"w":256,"h":256,"i":null,"createObjectURL":null},
     };
 
     // "showUploader","showProgress","showResults"
@@ -16,8 +16,6 @@ function CurrentStyleTransferUI() {
     const [imagesState, setImagesState] = useState(INITIAL_IMAGES_STATE);
 
     function resetImages() { setImagesState(INITIAL_IMAGES_STATE) }
-    function uploadImage(imageKey) { alert(imageKey); }; //tbd
-
     function getImageSrc(imageKey) { return imagesState[imageKey]["src"]; }
     function getImageWidth(imageKey) { return imagesState[imageKey]["w"]; }
     function getImageHeight(imageKey) { return imagesState[imageKey]["h"]; }
@@ -29,23 +27,39 @@ function CurrentStyleTransferUI() {
         return count == 2;
     }
 
+    const uploadToClient = (event, imageKey) => {
+      if (event.target.files && event.target.files[0]) {
+        const i = event.target.files[0];
+        var imagesStateNew = imagesState;
+        imagesStateNew[imageKey]["i"]=i;
+        imagesStateNew[imageKey]["src"]=URL.createObjectURL(i);
+        setImagesState(imagesStateNew)
+      }
+    };
+  
+    const uploadToServer = async (event) => {
+      const body = new FormData();
+      body.append("contentImage", imagesState["contentImage"]["i"]);
+      body.append("styleImage", imagesState["styleImage"]["i"]);
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body
+      });
+    };
+  
     if (currentState == "showUploader") {
         return (<>
             <h1>Please upload two images</h1>
             <table border={0}><tr>
                 <td>
                     <Image src={getImageSrc("contentImage")} width={getImageWidth("contentImage")} height={getImageHeight("contentImage")} alt="Content image" />
-                    <button
-                        type="button"
-                        onClick={() => uploadImage("contentImage")}
-                    >Upload Content Image</button>
+                    <input type="file" name="Upload Content Image" onChange={(event)=>uploadToClient(event,"contentImage")} />
+                    <p>Upload Content Image</p>
                 </td>
                 <td>
                     <Image src={getImageSrc("styleImage")} width={getImageWidth("styleImage")} height={getImageHeight("styleImage")} alt="Style image" />
-                    <button
-                        type="button"
-                        onClick={() => uploadImage("styleImage")}
-                    >Upload Style Image</button>
+                    <input type="file" name="Upload Style Image" onChange={(event)=>uploadToClient(event,"styleImage")} />
+                    <p>Upload Style Image</p>
                 </td>
             </tr></table>
             <p>
