@@ -118,7 +118,7 @@ const Container = styled.main`
   min-height: 100vh;
 `
 
-export default ({ children, theme, title = 'Style Transfer UI' }) => (
+export default function StyleTransferUI ({ children, theme, title = 'Style Transfer UI' }) { return (
   <ThemeProvider theme={theme}>
     <Container>
       <Head>
@@ -137,4 +137,4 @@ export default ({ children, theme, title = 'Style Transfer UI' }) => (
       <GlobalStyle />
     </Container>
   </ThemeProvider>
-)
+) }
