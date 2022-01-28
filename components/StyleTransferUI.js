@@ -70,7 +70,7 @@ function CurrentStyleTransferUI() {
         console.log("http reply:",res)
         set_moment_stamp(Date.now()+"_"+Math.random());
         setProgressState({"status_msg":"Uploaded images, mixing images with the neural network..."})
-    }).catch(error) {
+    }).catch(error => {
         console.log("http reply (error):", error.message, error);
         set_moment_stamp(Date.now()+"_"+Math.random());
         setProgressState({"status_msg":`Error: ${error.message}`})
