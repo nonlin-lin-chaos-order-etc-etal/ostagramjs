@@ -45,17 +45,19 @@ function CurrentStyleTransferUI() {
         //setTimestamp(Date.now());
         setImagesState(imagesStateNew);
         set_moment_stamp(Date.now()+"_"+Math.random());
-        const img = new Image();
-        img.onLoad = () => {
-            var imagesStateNewWH = imagesState;
-            imagesStateNewWH[imageKey]["w"]=img.width;
-            imagesStateNewWH[imageKey]["h"]=img.height;
-            //setImagesState(null); //to trigger React refresh FIXME
-            //setTimestamp(Date.now());
-            setImagesState(imagesStateNewWH);
-            set_moment_stamp(Date.now()+"_"+Math.random());
-        };
-        img.src = imagesStateNew[imageKey]["src"];
+
+        const img = React.createElement("img", {
+            onLoad: () => {
+                var imagesStateNewWH = imagesState;
+                imagesStateNewWH[imageKey]["w"]=img.width;
+                imagesStateNewWH[imageKey]["h"]=img.height;
+                //setImagesState(null); //to trigger React refresh FIXME
+                //setTimestamp(Date.now());
+                setImagesState(imagesStateNewWH);
+                set_moment_stamp(Date.now()+"_"+Math.random());
+            },
+            src: imagesStateNew[imageKey]["src"]
+         }, null);
       }
     };
   
