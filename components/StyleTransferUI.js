@@ -14,6 +14,7 @@ function CurrentStyleTransferUI() {
     // "showUploader","showProgress","showResults"
     const [currentState, setState] = useState("showUploader");
     const [imagesState, setImagesState] = useState(INITIAL_IMAGES_STATE);
+    const [progressState, setProgressState] = useState({"status_msg":"Idle"});
 
     function resetImages() { setImagesState(INITIAL_IMAGES_STATE) }
     function getImageSrc(imageKey) { return imagesState[imageKey]["src"]; }
@@ -37,14 +38,17 @@ function CurrentStyleTransferUI() {
       }
     };
   
-    const uploadToServer = async (event) => {
-      const body = new FormData();
-      body.append("contentImage", imagesState["contentImage"]["i"]);
-      body.append("styleImage", imagesState["styleImage"]["i"]);
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body
-      });
+    const uploadToServer = async () => {
+        setState("showProgress")
+        setProgressState({"status_msg":"Uploading images..."})
+        const body = new FormData();
+        body.append("contentImage", imagesState["contentImage"]["i"]);
+        body.append("styleImage", imagesState["styleImage"]["i"]);
+        const response = await fetch("/api/upload", {
+            method: "POST",
+            body
+        });
+        setProgressState({"status_msg":"Uploaded images, mixing images with the neural network... TODO"})
     };
   
     if (currentState == "showUploader") {
@@ -65,7 +69,7 @@ function CurrentStyleTransferUI() {
             <p>
                 <button
                     type="button"
-                    onClick={() => setState("showProgress")}
+                    onClick={uploadToServer()}
                     disabled={ () => bothImagesUploaded() ? "false" : "disabled" }
                 >Submit For Processing</button>
                 <button
@@ -76,11 +80,11 @@ function CurrentStyleTransferUI() {
         </>);
     }
     if (currentState == "showProgress") {
-        setTimeout(() => setState("showResults"), 5000);
+        // setTimeout(() => setState("showResults"), 5000);
         return (<>
-            <h1>Style transfer in progress, please wait...</h1>
-            <p>
-            </p>
+            <h1>Progress Status</h1>
+            <p><i>{progressState["status_msg"]}</i></p>
+            <p><i>Please wait</i></p>
         </>);
     }
     if (currentState == "showResults") {
