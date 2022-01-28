@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, createElement } from "react";
 import Head from 'next/head'
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { normalize } from 'polished'
@@ -46,7 +46,7 @@ function CurrentStyleTransferUI() {
         setImagesState(imagesStateNew);
         set_moment_stamp(Date.now()+"_"+Math.random());
 
-        const img = React.createElement("img", {
+        const img = createElement("img", {
             onLoad: () => {
                 var imagesStateNewWH = imagesState;
                 imagesStateNewWH[imageKey]["w"]=img.width;
