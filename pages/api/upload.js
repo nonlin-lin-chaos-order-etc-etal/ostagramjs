@@ -12,7 +12,7 @@ export default function handler(req, res) {
       'Accept': 'application/x-www-form-urlencoded',
       'Content-Type': 'application/x-www-form-urlencoded'
     },
-    querystring.encode(map)
+    body: querystring.encode(map)
   }).then(res => {
       console.log("http reply:",res)
       res.status(200).json({ response_body: res.body }); //TODO
