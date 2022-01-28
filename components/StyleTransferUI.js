@@ -14,7 +14,7 @@ function CurrentStyleTransferUI() {
     // "showUploader","showProgress","showResults"
     const [currentState, setState] = useState("showUploader");
     const [imagesState, setImagesState] = useState(INITIAL_IMAGES_STATE);
-    const [timestamp, setTimestamp] = useState(Date.now());
+    const [moment_stamp, set_moment_stamp] = useState(Date.now()+"_"+Math.random());
     const [progressState, setProgressState] = useState({"status_msg":"Idle"});
 
     function resetImages() { console.log("resetImages enter"); setImagesState(INITIAL_IMAGES_STATE) }
@@ -43,7 +43,8 @@ function CurrentStyleTransferUI() {
         imagesStateNew[imageKey]["src"]=URL.createObjectURL(i);
         //setImagesState(null); //to trigger React refresh FIXME
         //setTimestamp(Date.now());
-        setTimeout(()=>{setImagesState(imagesStateNew);setTimestamp(Date.now());},0);
+        setImagesState(imagesStateNew);
+        set_moment_stamp(Date.now()+"_"+Math.random());
         const img = new Image();
         img.onLoad = () => {
             var imagesStateNewWH = imagesState;
@@ -51,7 +52,8 @@ function CurrentStyleTransferUI() {
             imagesStateNewWH[imageKey]["h"]=img.height;
             //setImagesState(null); //to trigger React refresh FIXME
             //setTimestamp(Date.now());
-            setTimeout(()=>{setImagesState(imagesStateNewWH);setTimestamp(Date.now());},0);
+            setImagesState(imagesStateNewWH);
+            set_moment_stamp(Date.now()+"_"+Math.random());
         };
         img.src = imagesStateNew[imageKey]["src"];
       }
@@ -68,7 +70,7 @@ function CurrentStyleTransferUI() {
             method: "POST",
             body
         }).then(res => {
-            setTimestamp(Date.now())
+            set_moment_stamp(Date.now()+"_"+Math.random());
             setProgressState({"status_msg":"Uploaded images, mixing images with the neural network... TODO"})
         })
         
@@ -79,12 +81,12 @@ function CurrentStyleTransferUI() {
             <h1>Please upload two images</h1>
             <table border={0}><tr>
                 <td>
-                    <Image key={Date.now()} src={getImageSrc("contentImage")} width={getImageWidth("contentImage")} height={getImageHeight("contentImage")} alt="Content image" />
+                    <Image key={moment_stamp} src={getImageSrc("contentImage")} width={getImageWidth("contentImage")} height={getImageHeight("contentImage")} alt="Content image" />
                     <input type="file" name="Upload Content Image" onChange={(event)=>uploadToClient(event,"contentImage")} />
                     <p>Upload Content Image</p>
                 </td>
                 <td>
-                    <Image key={Date.now()} src={getImageSrc("styleImage")} width={getImageWidth("styleImage")} height={getImageHeight("styleImage")} alt="Style image" />
+                    <Image key={moment_stamp} src={getImageSrc("styleImage")} width={getImageWidth("styleImage")} height={getImageHeight("styleImage")} alt="Style image" />
                     <input type="file" name="Upload Style Image" onChange={(event)=>uploadToClient(event,"styleImage")} />
                     <p>Upload Style Image</p>
                 </td>
