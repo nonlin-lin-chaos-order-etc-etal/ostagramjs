@@ -14,6 +14,7 @@ function CurrentStyleTransferUI() {
     // "showUploader","showProgress","showResults"
     const [currentState, setState] = useState("showUploader");
     const [imagesState, setImagesState] = useState(INITIAL_IMAGES_STATE);
+    const [timestamp, setTimestamp] = useState(Date.now());
     const [progressState, setProgressState] = useState({"status_msg":"Idle"});
 
     function resetImages() { console.log("resetImages enter"); setImagesState(INITIAL_IMAGES_STATE) }
@@ -40,8 +41,19 @@ function CurrentStyleTransferUI() {
         var imagesStateNew = imagesState;
         imagesStateNew[imageKey]["i"]=i;
         imagesStateNew[imageKey]["src"]=URL.createObjectURL(i);
-        setImagesState(null); //to trigger React refresh FIXME
-        setImagesState(imagesStateNew);
+        //setImagesState(null); //to trigger React refresh FIXME
+        //setTimestamp(Date.now());
+        setTimeout(()=>{setImagesState(imagesStateNew);setTimestamp(Date.now());},0);
+        const img = new Image();
+        img.onLoad = () => {
+            var imagesStateNewWH = imagesState;
+            imagesStateNewWH[imageKey]["w"]=img.width;
+            imagesStateNewWH[imageKey]["h"]=img.height;
+            //setImagesState(null); //to trigger React refresh FIXME
+            //setTimestamp(Date.now());
+            setTimeout(()=>{setImagesState(imagesStateNewWH);setTimestamp(Date.now());},0);
+        };
+        img.src = imagesStateNew[imageKey]["src"];
       }
     };
   
@@ -51,11 +63,15 @@ function CurrentStyleTransferUI() {
         const body = new FormData();
         body.append("contentImage", imagesState["contentImage"]["i"]);
         body.append("styleImage", imagesState["styleImage"]["i"]);
-        const response = await fetch("/api/upload", {
+
+        axios.post("/api/upload", {
             method: "POST",
             body
-        });
-        setProgressState({"status_msg":"Uploaded images, mixing images with the neural network... TODO"})
+        }).then(res => {
+            setTimestamp(Date.now())
+            setProgressState({"status_msg":"Uploaded images, mixing images with the neural network... TODO"})
+        })
+        
     };
   
     if (currentState == "showUploader") {
@@ -63,12 +79,12 @@ function CurrentStyleTransferUI() {
             <h1>Please upload two images</h1>
             <table border={0}><tr>
                 <td>
-                    <Image src={getImageSrc("contentImage")} width={getImageWidth("contentImage")} height={getImageHeight("contentImage")} alt="Content image" />
+                    <Image key={Date.now()} src={getImageSrc("contentImage")} width={getImageWidth("contentImage")} height={getImageHeight("contentImage")} alt="Content image" />
                     <input type="file" name="Upload Content Image" onChange={(event)=>uploadToClient(event,"contentImage")} />
                     <p>Upload Content Image</p>
                 </td>
                 <td>
-                    <Image src={getImageSrc("styleImage")} width={getImageWidth("styleImage")} height={getImageHeight("styleImage")} alt="Style image" />
+                    <Image key={Date.now()} src={getImageSrc("styleImage")} width={getImageWidth("styleImage")} height={getImageHeight("styleImage")} alt="Style image" />
                     <input type="file" name="Upload Style Image" onChange={(event)=>uploadToClient(event,"styleImage")} />
                     <p>Upload Style Image</p>
                 </td>
