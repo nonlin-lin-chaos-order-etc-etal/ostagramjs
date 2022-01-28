@@ -1,5 +1,7 @@
 import { useState, createElement } from "react";
-import axios from 'axios';
+import { useRouter } from 'next/router'
+import useSWR from 'swr'
+import axios from 'axios'
 import Head from 'next/head'
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { normalize } from 'polished'
@@ -61,6 +63,15 @@ function CurrentStyleTransferUI() {
          }, null);
       }
     };
+
+    const fetcher = (url, body) => axios.post(url, {
+        method: "POST",
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        body
+    }).then(res => {
+        console.log("http reply:",res)
+        return res.data
+    });
   
     const uploadToServer = () => {
         console.log("uploadToServer enter");
@@ -72,22 +83,23 @@ function CurrentStyleTransferUI() {
         body.append("styleImage", imagesState["styleImage"]["i"]);
         console.log("uploadToServer posting");
 
-        axios.post("/api/upload", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/x-www-form-urlencoded',
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body
-        }).then(res => {
-            console.log("http reply:",res)
+        const { query } = useRouter()
+        const { data, error } = useSWR(
+          () => `/api/upload`,
+          url => fetcher(url, body)
+        )
+
+        if (error) {
             set_moment_stamp(Date.now()+"_"+Math.random());
-            setProgressState({"status_msg":"Uploaded images, mixing images with the neural network... TODO"})
-        }).catch(err => {
-            console.log("http reply (error):",err.message, err)
-            set_moment_stamp(Date.now()+"_"+Math.random());
-            setProgressState({"status_msg":`Error: ${err.message}`})
-        });
+            setProgressState({"status_msg":`Error: ${error.message}`})
+            return
+        }
+        if (!data){
+            setProgressState({"status_msg":`Uploading images...`})
+            return
+        }
+        set_moment_stamp(Date.now()+"_"+Math.random());
+        setProgressState({"status_msg":"Uploaded images, mixing images with the neural network..."})
     };
   
     if (currentState == "showUploader") {
