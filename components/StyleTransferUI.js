@@ -1,5 +1,4 @@
 import { useState, createElement } from "react";
-import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import axios from 'axios'
 import Head from 'next/head'
@@ -83,7 +82,6 @@ function CurrentStyleTransferUI() {
         body.append("styleImage", imagesState["styleImage"]["i"]);
         console.log("uploadToServer posting");
 
-        const { query } = useRouter()
         const { data, error } = useSWR(
           () => `/api/upload`,
           url => fetcher(url, body)
