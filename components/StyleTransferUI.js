@@ -3,7 +3,6 @@ import Head from 'next/head'
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { normalize } from 'polished'
 import Image from 'next/image'
-import Button from 'next/button'
 
 function CurrentStyleTransferUI() {
     const INITIAL_IMAGES_STATE = {
@@ -102,11 +101,11 @@ function CurrentStyleTransferUI() {
                 </td>
             </tr></table>
             <p>
-                <Button
+                <button
                     type="button"
                     onClick={uploadToServer}
-                    disabled={ () => bothImagesUploaded() ? "false" : "disabled" }
-                >Submit For Processing</Button>
+                    disabled={ () => !bothImagesUploaded() }
+                >Submit For Processing</button>
                 <button
                     type="button"
                     onClick={() => resetImages()}
