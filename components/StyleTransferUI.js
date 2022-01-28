@@ -62,11 +62,14 @@ function CurrentStyleTransferUI() {
     };
   
     const uploadToServer = async () => {
+        console.log("uploadToServer enter");
         setState("showProgress")
         setProgressState({"status_msg":"Uploading images..."})
+        console.log("uploadToServer new FormData");
         const body = new FormData();
         body.append("contentImage", imagesState["contentImage"]["i"]);
         body.append("styleImage", imagesState["styleImage"]["i"]);
+        console.log("uploadToServer posting");
 
         axios.post("/api/upload", {
             method: "POST",
@@ -74,8 +77,11 @@ function CurrentStyleTransferUI() {
         }).then(res => {
             set_moment_stamp(Date.now()+"_"+Math.random());
             setProgressState({"status_msg":"Uploaded images, mixing images with the neural network... TODO"})
-        })
-        
+        }).error(err => {
+            console.log("error:",err)
+            set_moment_stamp(Date.now()+"_"+Math.random());
+            setProgressState({"status_msg":`Error: ${err}`})
+        });
     };
   
     if (currentState == "showUploader") {
