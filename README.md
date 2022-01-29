@@ -20,15 +20,29 @@ To deploy this project to Gitpod, tap this button:
 ### A hack to run on AMD ROCm (2022 Jan 28)
 
 ```sh
-git clone --recursive git@github.com:pytorch/pytorch.git && cd pytorch && python3 tools/amd_build/build_amd.py
+mkdir -pv ~/vcs && \
+  sudo apt install python3.9-dev ccache ninja-build llvm-amdgpu4.3.1 rocrand4.3.1 rocblas4.3.1 hip-rocclr4.3.1 hsa-rocr-dev4.3.1 \
+    rocm-dbgapi4.3.1 rocm-debug-agent4.3.1 rocm-gdb4.3.1 comgr4.3.1 hsakmt-roct4.3.1 rocminfo4.3.1 hsakmt-roct-dev4.3.1 \
+    hip-base4.3.1 hip-doc4.3.1 hip-rocclr4.3.1 hip-samples4.3.1 rocm-dev4.3.1 hsa-rocr-dev4.3.1 rocm-opencl4.3.1 \
+    rocprofiler-dev4.3.1 rocm-opencl-dev4.3.1 rocm-clang-ocl4.3.1 rocm-utils4.3.1 comgr4.3.1 rocm-device-libs4.3.1 \
+    rocm-smi-lib4.3.1 roctracer-dev4.3.1 openmp-extras4.3.1 rocm-cmake4.3.1 hsa-amd-aqlprofile4.3.1 rocm-device-libs4.3.1 \
+    rocm-dev4.3.1 rocm-cmake4.3.1 miopen-hip4.3.1 hipfft4.3.1 hipsparse4.3.1 rocprim4.3.1 hipcub4.3.1 rocthrust4.3.1 \
+    rccl4.3.1 rocminfo4.3.1 && \
+  virtualenv --python=python3.9 ~/vcs/ostagramjs_venv3.9 && \
+  . ~/vcs/ostagramjs_venv3.9/bin/activate && \
+  git clone --recursive git@github.com:pytorch/pytorch.git && cd pytorch && python tools/amd_build/build_amd.py
+
+pip install -r requirements.txt
 
 # This creates dist/*.whl
-RCCL_DIR=/opt/rocm/rccl/lib/cmake/rccl/ PYTORCH_ROCM_ARCH=gfx900 hip_DIR=/opt/rocm/hip/cmake/ USE_NVCC=OFF BUILD_CAFFE2_OPS=0 PATH=/usr/lib/ccache/:$PATH USE_CUDA=OFF python3 setup.py bdist_wheel
+rocrand_DIR=/opt/rocm/rocclr/lib/cmake/rocrand ROCclr_DIR=/opt/rocm/rocclr/lib/cmake/rocclr PYTORCH_ROCM_ARCH=gfx900 \
+  hip_DIR=/opt/rocm/hip/cmake/ USE_NVCC=OFF BUILD_CAFFE2_OPS=0   PATH=/usr/lib/ccache/:$PATH USE_CUDA=OFF USE_ROCM=ON DEBUG=ON python setup.py bdist_wheel
 
-# Use pip3
-sudo pip install pytorch/dist/*.whl
+pip install dist/*.whl
 
-# Now you can use PyTorch as usual and when you say a = torch.randn(5, 5, device="cuda"), it'll create a tensor on the (AMD) GPU.
+# Now you can use PyTorch as usual and when you say:
+#   a = torch.randn(5, 5, device="cuda"),
+# it'll create a tensor on the (AMD) GPU.
 
 # Credits: http://lernapparat.de/pytorch-rocm/
 ```
