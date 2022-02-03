@@ -5,8 +5,10 @@ import sys
 import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs
-from cgi import parse_header, parse_multipart
+from cgi import parse_header #, parse_multipart
 from random import random
+from requests_toolbelt.multipart import decoder
+
 
 experiment_dir = "vcs/style_transfer/PyTorch-Style-Transfer/experiments"
 workingdir = '{}/{}'.format(os.environ['HOME'], experiment_dir)
@@ -17,9 +19,9 @@ def mix_nn(styleImgFileName, contentImgFileName, outfilename):
     # specify the list of arguments to be used as input to main.py
     args = ['eval',
             '--content-image',
-            '{}/images/content/venice-boat.jpg'.format(workingdir),
+            contentImgFileName,
             '--style-image',
-            '{}/images/21styles/starry_night.jpg'.format(workingdir),
+            styleImgFileName,
             '--model',
             '{}/models/21styles.model'.format(workingdir),
             '--output-image',
@@ -55,10 +57,20 @@ class HttpHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         try:
             postvars = self.parse_POST()
-            print(postvars)
+            print("httphan.postvars:", postvars)
+            styleImage = postvars['styleImage'] # [b'...']
+            contentImage = postvars['contentImage'] # [b'...']
+            print("styleImage  [0][:50]:", styleImage  [0][:50])
+            print("contentImage[0][:50]:", contentImage[0][:50])
 
-            outfilename = '{}/{}.jpg'.format(workingdir, str(random()))
-            p = Process(target=mix_nn, args=(None, None, outfilename))
+            outfilename = '{}/{}.jpg'.format(workingdir, f"out{random()}")
+            fnstyle = '{}/{}.jpg'.format(workingdir, f'stl{random()}')
+            fncontent = '{}/{}.jpg'.format(workingdir, f'cnt{random()}')
+            
+            with open(fnstyle, "wb") as f: f.write(styleImage[0])
+            with open(fncontent, "wb") as f: f.write(contentImage[0])
+
+            p = Process(target=mix_nn, args=(fnstyle, fncontent, outfilename))
             p.start()
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
@@ -86,8 +98,45 @@ class HttpHandler(BaseHTTPRequestHandler):
         ctype, pdict = parse_header(self.headers['content-type'])
         print("Detected Content-Type:", ctype)
         print("Detected pdict:", pdict)
+        length = int(self.headers['content-length'])
+        print("Detected content-length:", length)
         if ctype == 'multipart/form-data':
-            postvars = parse_multipart(self.rfile, pdict)
+            print("Detected multipart/form-data")
+            content = self.rfile.read(length)
+            content_type = self.headers.get('content-type', None)
+            multipart_data = decoder.MultipartDecoder(content, content_type, encoding="utf-8")
+            postvars = {}
+            print("parts BEGIN");
+            for part in multipart_data.parts:
+                print("part.content[:50]:", part.content[:50])  # Alternatively, part.text if you want unicode
+                print("part.headers:", part.headers)
+                cdisp = part.headers[b'Content-Disposition'].decode("utf-8")
+                print("content-disposition:", cdisp)
+                cdisp=[value.strip().split('=') for value in cdisp.split(";")]
+                for kv in cdisp:
+                    if len(kv) != 2: continue
+                    k=kv[0]
+                    v=kv[1]
+                    if k == "name":
+                        if v == '"styleImage"':
+                            postvars['styleImage'] = [part.content] # [b'']
+                            break
+                        if v == '"contentImage"':
+                            postvars['contentImage'] = [part.content] # [b'']
+                            break
+                        break
+            print("parts END");
+            """
+                parts BEGIN
+                part.content[:50]: b'\xef\xbf\xbd\xef\xbf\xbd\xef\xbf\xbd\xef\xbf\xbd\x00\x10JFIF\x00\x01\x01\x01\x00H\x00H\x00\x00\xef\xbf\xbd\xef\xbf\xbd\x00C\x00\x05\x03\x04\x04\x04\x03\x05\x04\x04\x04\x05\x05\x05'
+                part.headers: {b'Content-Disposition': b'form-data; name="styleImage"; filename="blob"', b'Content-Type': b'application/octet-stream'}
+                part.content[:50]: b'\xef\xbf\xbd\xef\xbf\xbd\xef\xbf\xbd\xef\xbf\xbd\x00\x10JFIF\x00\x01\x02\x00\x00\x01\x00\x01\x00\x00\xef\xbf\xbd\xef\xbf\xbd\x006Photoshop 3.0\x00'
+                part.headers: {b'Content-Disposition': b'form-data; name="contentImage"; filename="blob"', b'Content-Type': b'application/octet-stream'}
+                parts END
+                httphan.postvars: {'styleImage': [], 'contentImage': []}
+            """
+            #if "boundary" in pdict: pdict["boundary"]=pdict["boundary"].encode("ascii")
+            #postvars = parse_multipart(self.rfile, pdict)
         elif ctype == 'application/x-www-form-urlencoded':
             length = int(self.headers['content-length'])
             postvars = parse_qs(
